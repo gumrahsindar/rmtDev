@@ -1,13 +1,5 @@
 <script setup lang="ts">
-type JobItem = {
-  id: number
-  badgeLetters: string
-  title: string
-  company: string
-  date: string
-  relevanceScore: number
-  daysAgo: number
-}
+import type { JobItem } from "../types"
 
 type JobListItemProps = {
   jobItem: JobItem

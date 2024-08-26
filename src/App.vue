@@ -16,11 +16,13 @@ import PaginationControls from "./components/PaginationControls.vue"
 
 const jobItems = ref([])
 const searchText = ref("")
+const isLoading = ref(false)
 
 watchEffect(async () => {
   if (!searchText.value) return
 
   const fetchData = async () => {
+    isLoading.value = true
     try {
       const res = await fetch(
         `${import.meta.env.VITE_BASE_API_URL}?search=${searchText.value}`
@@ -31,6 +33,8 @@ watchEffect(async () => {
       console.log(jobItems.value)
     } catch (error) {
       console.error(error)
+    } finally {
+      isLoading.value = false
     }
   }
 
@@ -57,7 +61,7 @@ watchEffect(async () => {
         <Sorting />
       </div>
 
-      <JobList :jobItems="jobItems" />
+      <JobList :jobItems="jobItems" :isLoading="isLoading" />
 
       <PaginationControls />
     </Sidebar>
