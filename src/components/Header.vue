@@ -1,18 +1,7 @@
-<script setup lang="ts">
-import BookmarksButton from "./BookmarksButton.vue"
-import Logo from "./Logo.vue"
-import SearchForm from "./SearchForm.vue"
-
-const searchText = defineModel<string>()
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <header class="header">
-    <div class="header__top">
-      <Logo />
-      <BookmarksButton />
-    </div>
-
-    <SearchForm v-model="searchText" />
+    <slot />
   </header>
 </template>

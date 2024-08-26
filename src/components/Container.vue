@@ -1,13 +1,7 @@
-<script setup lang="ts">
-import JobItemContent from "./JobItemContent.vue"
-import Sidebar from "./Sidebar.vue"
-
-defineProps(["jobItems"])
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <div class="container">
-    <Sidebar :jobItems="jobItems" />
-    <JobItemContent />
+    <slot />
   </div>
 </template>
