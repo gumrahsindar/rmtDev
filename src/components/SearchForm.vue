@@ -3,15 +3,7 @@ const searchText = defineModel<string>()
 </script>
 
 <template>
-  <form
-    @submit.prevent="
-      (e) => {
-        e.preventDefault()
-      }
-    "
-    action="#"
-    class="search"
-  >
+  <form @submit.prevent action="#" class="search">
     <button type="submit">
       <i class="fa-solid fa-magnifying-glass"></i>
     </button>
