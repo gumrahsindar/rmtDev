@@ -1,7 +1,10 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import EmptyJobContent from "./EmptyJobContent.vue"
+</script>
 
 <template>
-  <section class="job-details">
+  <EmptyJobContent v-if="1" />
+  <section v-else class="job-details">
     <div>
       <img
         src="https://images.unsplash.com/photo-1610374792793-f016b77ca51a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1272&q=100"
@@ -98,15 +101,4 @@
       </footer>
     </div>
   </section>
-
-  <!-- <section className="job-details">
-      <div>
-        <div className="job-details__start-view">
-          <p>What are you looking for?</p>
-          <p>
-            Start by searching for any technology your ideal job is working with
-          </p>
-        </div>
-      </div>
-    </section> -->
 </template>
