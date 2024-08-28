@@ -1,15 +1,23 @@
 <script setup lang="ts">
+import { useActiveId } from "../composables/useActiveId"
+import { useJobItem } from "../composables/useJobItem"
 import EmptyJobContent from "./EmptyJobContent.vue"
+import Spinner from "./Spinner.vue"
+
+const { activeId } = useActiveId()
+const { jobItem, isLoading } = useJobItem(activeId)
 </script>
 
 <template>
-  <EmptyJobContent v-if="1" />
+  <section v-if="isLoading" class="job-details">
+    <div>
+      <Spinner />
+    </div>
+  </section>
+  <EmptyJobContent v-else-if="!jobItem" />
   <section v-else class="job-details">
     <div>
-      <img
-        src="https://images.unsplash.com/photo-1610374792793-f016b77ca51a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1272&q=100"
-        alt="#"
-      />
+      <img :src="jobItem.coverImgURL" alt="#" />
 
       <a
         class="apply-btn"
@@ -21,9 +29,9 @@ import EmptyJobContent from "./EmptyJobContent.vue"
 
       <section class="job-info">
         <div class="job-info__left">
-          <div class="job-info__badge">9T</div>
+          <div class="job-info__badge">{{ jobItem.badgeLetters }}</div>
           <div class="job-info__below-badge">
-            <time class="job-info__time">2d</time>
+            <time class="job-info__time">{{ jobItem.daysAgo }}d</time>
 
             <svg
               width="15"
@@ -43,24 +51,23 @@ import EmptyJobContent from "./EmptyJobContent.vue"
         </div>
 
         <div class="job-info__right">
-          <h2 class="second-heading">Front End React Engineer</h2>
-          <p class="job-info__company">9th Tech</p>
+          <h2 class="second-heading">{{ jobItem.title }}</h2>
+          <p class="job-info__company">{{ jobItem.company }}</p>
           <p class="job-info__description">
-            Join us as we pursue our disruptive new vision to make machine data
-            accessible, usable, and valuable to everyone.
+            {{ jobItem.description }}
           </p>
           <div class="job-info__extras">
             <p class="job-info__extra">
               <i class="fa-solid fa-clock job-info__extra-icon"></i>
-              Full-Time
+              {{ jobItem.duration }}
             </p>
             <p class="job-info__extra">
               <i class="fa-solid fa-money-bill job-info__extra-icon"></i>
-              $105,000+
+              {{ jobItem.salary }}
             </p>
             <p class="job-info__extra">
-              <i class="fa-solid fa-location-dot job-info__extra-icon"></i>{" "}
-              Global
+              <i class="fa-solid fa-location-dot job-info__extra-icon"></i
+              >{{ jobItem.location }}
             </p>
           </div>
         </div>
@@ -75,9 +82,13 @@ import EmptyJobContent from "./EmptyJobContent.vue"
             </p>
           </div>
           <ul class="qualifications__list">
-            <li class="qualifications__item">React</li>
-            <li class="qualifications__item">Next.js</li>
-            <li class="qualifications__item">Tailwind CSS</li>
+            <li
+              class="qualifications__item"
+              v-for="(qualification, index) in jobItem.qualifications"
+              :key="index"
+            >
+              {{ qualification }}
+            </li>
           </ul>
         </section>
 
@@ -87,15 +98,20 @@ import EmptyJobContent from "./EmptyJobContent.vue"
             <p class="reviews__sub-text">Recent things people are saying</p>
           </div>
           <ul class="reviews__list">
-            <li class="reviews__item">Nice building and food also.</li>
-            <li class="reviews__item">Great working experience.</li>
+            <li
+              class="reviews__item"
+              v-for="(reviews, index) in jobItem.reviews"
+              :key="index"
+            >
+              {{ reviews }}
+            </li>
           </ul>
         </section>
       </div>
 
       <footer class="job-details__footer">
         <p class="job-details__footer-text">
-          If possible, please reference that you found the job on{" "}
+          If possible, please reference that you found the job on
           <span class="u-bold">rmtDev</span>, we would really appreciate it!
         </p>
       </footer>

@@ -10,7 +10,7 @@ defineProps<JobListItemProps>()
 
 <template>
   <li class="job-item">
-    <a class="job-item__link">
+    <a :href="`#${jobItem.id.toString()}`" class="job-item__link">
       <div class="job-item__badge">{{ jobItem.badgeLetters }}</div>
 
       <div class="job-item__middle">
