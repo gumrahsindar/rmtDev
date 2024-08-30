@@ -2,6 +2,7 @@
 import JobListItem from "./JobListItem.vue"
 import Spinner from "./Spinner.vue"
 import type { JobItem } from "../types"
+import { useActiveId } from "../composables/useActiveId"
 
 type JobListProps = {
   jobItems: JobItem[]
@@ -9,6 +10,8 @@ type JobListProps = {
 }
 
 defineProps<JobListProps>()
+
+const { activeId } = useActiveId()
 </script>
 
 <template>
@@ -19,6 +22,7 @@ defineProps<JobListProps>()
       v-for="jobItem in jobItems"
       :key="jobItem.id"
       :jobItem="jobItem"
+      :isActive="jobItem.id === activeId"
     />
   </ul>
 </template>

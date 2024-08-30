@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue"
+import { computed, ref } from "vue"
 import Background from "./components/Background.vue"
 import Container from "./components/Container.vue"
 import Footer from "./components/Footer.vue"
@@ -14,17 +14,38 @@ import Sorting from "./components/Sorting.vue"
 import JobList from "./components/JobList.vue"
 import PaginationControls from "./components/PaginationControls.vue"
 import { useJobItems } from "./composables/useJobItems"
-import { useActiveId } from "./composables/useActiveId"
-import { useJobItem } from "./composables/useJobItem"
+import { useDebounce } from "./composables/useDebounce"
 
+// state
 const searchText = ref("")
-const { jobItems, isLoading } = useJobItems(searchText)
+const { debounceSearchText } = useDebounce(searchText)
+const { jobItems, isLoading } = useJobItems(debounceSearchText)
+const currentPage = ref(1)
+
+// computed
+const jobItemsSliced = computed(() => {
+  return jobItems.value
+    ? jobItems.value.slice((currentPage.value - 1) * 7, currentPage.value * 7)
+    : []
+})
+const totalNumberOfResults = computed(() => {
+  return jobItems.value ? jobItems.value.length : 0
+})
+
+const totalPages = computed(() => {
+  return Math.ceil(totalNumberOfResults.value / 7)
+})
+
+// methods
 </script>
 
 <template>
   <Background />
 
   <Header>
+    <pre>
+      {{ currentPage }}
+    </pre>
     <div class="header__top">
       <Logo />
       <BookmarksButton />
@@ -36,13 +57,16 @@ const { jobItems, isLoading } = useJobItems(searchText)
   <Container>
     <Sidebar>
       <div class="sidebar__top">
-        <ResultsCount />
+        <ResultsCount :totalNumberOfResults="totalNumberOfResults" />
         <Sorting />
       </div>
 
-      <JobList :jobItems="jobItems" :isLoading="isLoading" />
+      <JobList :jobItems="jobItemsSliced" :isLoading="isLoading" />
 
-      <PaginationControls />
+      <PaginationControls
+        v-model:currentPage="currentPage"
+        :totalPages="totalPages"
+      />
     </Sidebar>
     <JobItemContent />
   </Container>
