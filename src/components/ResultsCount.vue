@@ -1,7 +1,11 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+defineProps<{ totalNumberOfResults: number }>()
+</script>
 
 <template>
-  <p class="count">0 results</p>
+  <p class="count">
+    <b>{{ totalNumberOfResults }}</b> results
+  </p>
 </template>
 
 <style scoped></style>
