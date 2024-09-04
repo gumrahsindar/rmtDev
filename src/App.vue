@@ -15,19 +15,35 @@ import JobList from "./components/JobList.vue"
 import PaginationControls from "./components/PaginationControls.vue"
 import { useJobItems } from "./composables/useJobItems"
 import { useDebounce } from "./composables/useDebounce"
+import { SortBy } from "./types"
 
 // state
 const searchText = ref("")
 const { debounceSearchText } = useDebounce(searchText)
 const { jobItems, isLoading } = useJobItems(debounceSearchText)
 const currentPage = ref(1)
+const sortBy = ref<SortBy>("relevant")
 
 // computed
-const jobItemsSliced = computed(() => {
+const jobItemSorted = computed(() => {
   return jobItems.value
-    ? jobItems.value.slice((currentPage.value - 1) * 7, currentPage.value * 7)
+    ? [...jobItems.value].sort((a, b) => {
+        if (sortBy.value === "relevant") {
+          return b.relevanceScore - a.relevanceScore
+        } else {
+          return a.daysAgo - b.daysAgo
+        }
+      })
     : []
 })
+
+const jobItemsSortedAndSliced = computed(() => {
+  return jobItemSorted.value.slice(
+    (currentPage.value - 1) * 7,
+    currentPage.value * 7
+  )
+})
+
 const totalNumberOfResults = computed(() => {
   return jobItems.value ? jobItems.value.length : 0
 })
@@ -37,6 +53,10 @@ const totalPages = computed(() => {
 })
 
 // methods
+const handleSortBy = (value: SortBy) => {
+  currentPage.value = 1
+  sortBy.value = value
+}
 </script>
 
 <template>
@@ -58,10 +78,11 @@ const totalPages = computed(() => {
     <Sidebar>
       <div class="sidebar__top">
         <ResultsCount :totalNumberOfResults="totalNumberOfResults" />
-        <Sorting />
+        <!-- <Sorting v-model:sortBy="sortBy" /> -->
+        <Sorting :handleSortBy="handleSortBy" :sortBy="sortBy" />
       </div>
 
-      <JobList :jobItems="jobItemsSliced" :isLoading="isLoading" />
+      <JobList :jobItems="jobItemsSortedAndSliced" :isLoading="isLoading" />
 
       <PaginationControls
         v-model:currentPage="currentPage"
