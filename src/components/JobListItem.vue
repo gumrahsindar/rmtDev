@@ -21,7 +21,7 @@ defineProps<JobListItemProps>()
       </div>
 
       <div class="job-item__right">
-        <BookmarkIcon />
+        <BookmarkIcon :id="jobItem.id" />
         <time class="job-item__time">{{ jobItem.daysAgo }}d</time>
       </div>
     </a>

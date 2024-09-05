@@ -33,7 +33,7 @@ const { jobItem, isLoading } = useJobItem(activeId)
           <div class="job-info__below-badge">
             <time class="job-info__time">{{ jobItem.daysAgo }}d</time>
 
-            <BookmarkIcon />
+            <BookmarkIcon :id="jobItem.id" />
           </div>
         </div>
 
