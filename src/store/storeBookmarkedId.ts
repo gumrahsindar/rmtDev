@@ -1,4 +1,4 @@
-import { reactive, ref } from "vue"
+import { ref, watchEffect } from "vue"
 
 const bookmarkedIds = ref<number[]>([])
 
@@ -8,6 +8,13 @@ const toggleBookmark = (id: number) => {
   } else {
     bookmarkedIds.value.push(id)
   }
+
+  watchEffect(() => {
+    localStorage.setItem(
+      "bookmarkedIds",
+      JSON.stringify(storeBookmarkedId.bookmarkedIds.value)
+    )
+  })
 }
 
 export const storeBookmarkedId = {

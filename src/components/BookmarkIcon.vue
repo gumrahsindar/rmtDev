@@ -2,15 +2,16 @@
 import { storeBookmarkedId } from "../store/storeBookmarkedId"
 
 defineProps<{ id: number }>()
-
-const { toggleBookmark, bookmarkedIds } = storeBookmarkedId
 </script>
 
 <template>
-  <button @click.prevent.stop="toggleBookmark(id)" class="bookmark-btn">
+  <button
+    @click.prevent.stop="storeBookmarkedId.toggleBookmark(id)"
+    class="bookmark-btn"
+  >
     <svg
       class=""
-      :class="{ filled: bookmarkedIds.includes(id) }"
+      :class="{ filled: storeBookmarkedId.bookmarkedIds.value.includes(id) }"
       width="15"
       height="15"
       viewBox="0 0 15 15"
