@@ -63,9 +63,6 @@ const handleSortBy = (value: SortBy) => {
   <Background />
 
   <Header>
-    <pre>
-      {{ currentPage }}
-    </pre>
     <div class="header__top">
       <Logo />
       <BookmarksButton />
