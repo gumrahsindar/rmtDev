@@ -1,8 +1,13 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { ref } from "vue"
+import BookmarksPopover from "./BookmarksPopover.vue"
+
+const isOpen = ref(false)
+</script>
 
 <template>
   <section>
-    <button class="bookmarks-btn">
+    <button @click="isOpen = !isOpen" class="bookmarks-btn">
       Bookmarks
       <svg
         width="15"
@@ -14,5 +19,7 @@
         <path d="M4 6H11L7.5 10.5L4 6Z" fill="currentColor"></path>
       </svg>
     </button>
+
+    <BookmarksPopover v-if="isOpen" />
   </section>
 </template>
