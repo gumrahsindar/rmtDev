@@ -2,7 +2,10 @@ import { ref } from "vue"
 import { useLocalStorage } from "../composables/useLocalStorage"
 
 const bookmarkedIds = ref<number[]>([])
-const { setItem } = useLocalStorage("bookmarkedIds", bookmarkedIds)
+const { setItem } = useLocalStorage<number[]>(
+  "bookmarkedIds",
+  bookmarkedIds.value
+)
 
 const toggleBookmark = (id: number) => {
   if (bookmarkedIds.value.includes(id)) {

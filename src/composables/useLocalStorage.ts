@@ -1,9 +1,9 @@
-import { ref, watchEffect } from "vue"
+import { Ref, ref, watchEffect } from "vue"
 
 export const useLocalStorage = <T>(key: string, initialValue: T) => {
   const storedValue = ref<T>(initialValue)
 
-  const setItem = (value: typeof storedValue) => {
+  const setItem = (value: Ref<T>) => {
     watchEffect(() => {
       localStorage.setItem(key, JSON.stringify(value.value))
     })
