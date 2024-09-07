@@ -13,7 +13,7 @@ import ResultsCount from "./components/ResultsCount.vue"
 import Sorting from "./components/Sorting.vue"
 import JobList from "./components/JobList.vue"
 import PaginationControls from "./components/PaginationControls.vue"
-import { useJobItems } from "./composables/useJobItems"
+import { useSearchQuery } from "./composables/useSearchQuery"
 import { useDebounce } from "./composables/useDebounce"
 import { SortBy } from "./types"
 import { storeBookmarkedId } from "./store/storeBookmarkedId"
@@ -22,10 +22,10 @@ import { useLocalStorage } from "./composables/useLocalStorage"
 // state
 const searchText = ref("")
 const { debounceSearchText } = useDebounce(searchText)
-const { jobItems, isLoading } = useJobItems(debounceSearchText)
+const { jobItems, isLoading } = useSearchQuery(debounceSearchText)
 const currentPage = ref(1)
 const sortBy = ref<SortBy>("relevant")
-const { storedValue: bookmarkedIds, getItem } = useLocalStorage(
+const { getItem } = useLocalStorage(
   "bookmarkedIds",
   storeBookmarkedId.bookmarkedIds
 )
