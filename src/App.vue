@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watchEffect } from "vue"
+import { ref, computed, onMounted } from "vue"
 import Background from "./components/Background.vue"
 import Container from "./components/Container.vue"
 import Footer from "./components/Footer.vue"
@@ -17,6 +17,7 @@ import { useJobItems } from "./composables/useJobItems"
 import { useDebounce } from "./composables/useDebounce"
 import { SortBy } from "./types"
 import { storeBookmarkedId } from "./store/storeBookmarkedId"
+import { useLocalStorage } from "./composables/useLocalStorage"
 
 // state
 const searchText = ref("")
@@ -24,6 +25,10 @@ const { debounceSearchText } = useDebounce(searchText)
 const { jobItems, isLoading } = useJobItems(debounceSearchText)
 const currentPage = ref(1)
 const sortBy = ref<SortBy>("relevant")
+const { storedValue: bookmarkedIds, getItem } = useLocalStorage(
+  "bookmarkedIds",
+  storeBookmarkedId.bookmarkedIds
+)
 
 // computed
 const jobItemSorted = computed(() => {
@@ -61,10 +66,7 @@ const handleSortBy = (value: SortBy) => {
 
 // get bookmarkedIds from localStorage
 onMounted(() => {
-  const bookmarkedIds = localStorage.getItem("bookmarkedIds")
-  if (bookmarkedIds) {
-    storeBookmarkedId.bookmarkedIds.value = JSON.parse(bookmarkedIds)
-  }
+  getItem()
 })
 </script>
 

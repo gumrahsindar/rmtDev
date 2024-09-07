@@ -1,6 +1,8 @@
-import { ref, watchEffect } from "vue"
+import { ref } from "vue"
+import { useLocalStorage } from "../composables/useLocalStorage"
 
 const bookmarkedIds = ref<number[]>([])
+const { setItem } = useLocalStorage("bookmarkedIds", bookmarkedIds)
 
 const toggleBookmark = (id: number) => {
   if (bookmarkedIds.value.includes(id)) {
@@ -9,12 +11,7 @@ const toggleBookmark = (id: number) => {
     bookmarkedIds.value.push(id)
   }
 
-  watchEffect(() => {
-    localStorage.setItem(
-      "bookmarkedIds",
-      JSON.stringify(storeBookmarkedId.bookmarkedIds.value)
-    )
-  })
+  setItem(bookmarkedIds)
 }
 
 export const storeBookmarkedId = {
