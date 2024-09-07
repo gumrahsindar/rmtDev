@@ -1,52 +1,28 @@
-import { computed, Ref, watch, watchEffect } from "vue"
-import { JobItem } from "../types"
-import { useQuery } from "@tanstack/vue-query"
-import { toast, type ToastOptions } from "vue3-toastify"
+import { useQueries } from "@tanstack/vue-query"
+import { useFetchJobItem } from "./useFetchJobItem"
+import { computed } from "vue"
 
-type TJobItemsApiResponse = {
-  jobItems: JobItem[]
-  public: boolean
-  sorted: boolean
-}
+const { fetchJobItem } = useFetchJobItem()
 
-type TSearchText = Ref<string | unknown>
-
-const fetchJobItems = async (
-  searchText: TSearchText
-): Promise<JobItem[] | undefined> => {
-  const res = await fetch(
-    `${import.meta.env.VITE_BASE_API_URL}?search=${searchText.value}`
-  )
-  if (!res.ok) {
-    const errorData = await res.json()
-    throw new Error(errorData.description)
-  }
-  const data: TJobItemsApiResponse = await res.json()
-  return data.jobItems
-}
-
-export function useJobItems(searchText: TSearchText) {
-  const searchTextKey = computed(() => searchText.value)
-  const enabled = computed(() => !!searchText.value)
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["jobItems", searchTextKey],
-    queryFn: () => fetchJobItems(searchText),
-    staleTime: 1000 * 60 * 60, // 1 hour
-    enabled,
-    retry: 1,
+export const useJobItems = (ids: number[]) => {
+  const results = useQueries({
+    queries: ids.map((id) => ({
+      queryKey: ["job", id],
+      queryFn: () => fetchJobItem(id),
+      staleTime: Infinity,
+      enabled: !!id, // id'nin geçerli olup olmadığını kontrol eder
+    })),
   })
 
-  watch(
-    error,
-    (newError) => {
-      if (newError) {
-        toast(newError.message, {
-          position: toast.POSITION.BOTTOM_RIGHT,
-        } as ToastOptions)
-      }
-    },
-    { immediate: true }
+  const bookmarkedJobItems = computed(() =>
+    results.value
+      .map((result) => result.data)
+      .filter((jobItem) => jobItem !== undefined)
   )
 
-  return { jobItems: data, isLoading, error }
+  const isLoading = computed(() =>
+    results.value.some((result) => result.isLoading)
+  )
+
+  return { bookmarkedJobItems, isLoading }
 }
