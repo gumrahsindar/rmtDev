@@ -1,11 +1,16 @@
 <script setup lang="ts">
-import { storeBookmarkedId } from "../store/storeBookmarkedId"
+import { storeBookmarkedId } from '../store/storeBookmarkedId'
 
 defineProps<{ id: number }>()
 </script>
 
 <template>
   <button
+    :aria-label="
+      storeBookmarkedId.bookmarkedIds.value.includes(id)
+        ? 'Remove bookmark'
+        : 'Add bookmark'
+    "
     @click.prevent.stop="storeBookmarkedId.toggleBookmark(id)"
     class="bookmark-btn"
   >

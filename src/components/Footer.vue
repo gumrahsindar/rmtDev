@@ -3,10 +3,7 @@
 <template>
   <footer class="footer">
     <small>
-      <p>
-        © Copyright by{" "}
-        <a href="https://bytegrad.com" target="_blank"> ByteGrad.com </a>
-      </p>
+      <p>© Copyright 2050</p>
     </small>
 
     <p><span class="u-bold">109573</span> total jobs available</p>

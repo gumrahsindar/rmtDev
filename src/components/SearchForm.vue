@@ -4,7 +4,7 @@ const searchText = defineModel<string>()
 
 <template>
   <form @submit.prevent action="#" class="search">
-    <button type="submit">
+    <button aria-label="Search for remote developer jobs" type="submit">
       <i class="fa-solid fa-magnifying-glass"></i>
     </button>
 
