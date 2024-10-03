@@ -1,13 +1,34 @@
 <script setup lang="ts">
-import { ref } from "vue"
-import BookmarksPopover from "./BookmarksPopover.vue"
+import { ref, onMounted, onBeforeUnmount } from 'vue'
+import BookmarksPopover from './BookmarksPopover.vue'
 
 const isOpen = ref(false)
+const popoverRef = ref<HTMLElement | null>(null)
+const buttonRef = ref<HTMLElement | null>(null)
+
+const handleClickOutside = (event: MouseEvent) => {
+  if (
+    popoverRef.value &&
+    !popoverRef.value.contains(event.target as Node) &&
+    buttonRef.value &&
+    !buttonRef.value.contains(event.target as Node)
+  ) {
+    isOpen.value = false
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('click', handleClickOutside)
+})
 </script>
 
 <template>
   <section>
-    <button @click="isOpen = !isOpen" class="bookmarks-btn">
+    <button ref="buttonRef" @click="isOpen = !isOpen" class="bookmarks-btn">
       Bookmarks
       <svg
         width="15"
@@ -20,6 +41,8 @@ const isOpen = ref(false)
       </svg>
     </button>
 
-    <BookmarksPopover v-if="isOpen" />
+    <div ref="popoverRef">
+      <BookmarksPopover v-if="isOpen" />
+    </div>
   </section>
 </template>
