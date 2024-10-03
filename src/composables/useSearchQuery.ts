@@ -1,7 +1,7 @@
-import { computed, Ref, watch, watchEffect } from "vue"
-import { JobItem } from "../types"
-import { useQuery } from "@tanstack/vue-query"
-import { toast, type ToastOptions } from "vue3-toastify"
+import { computed, Ref, watch } from 'vue'
+import { JobItem } from '../types'
+import { useQuery } from '@tanstack/vue-query'
+import { toast, type ToastOptions } from 'vue3-toastify'
 
 type TJobItemsApiResponse = {
   jobItems: JobItem[]
@@ -29,7 +29,7 @@ export function useSearchQuery(searchText: TSearchText) {
   const searchTextKey = computed(() => searchText.value)
   const enabled = computed(() => !!searchText.value)
   const { data, isLoading, error } = useQuery({
-    queryKey: ["jobItems", searchTextKey],
+    queryKey: ['jobItems', searchTextKey],
     queryFn: () => fetchJobItems(searchText),
     staleTime: 1000 * 60 * 60, // 1 hour
     enabled,
