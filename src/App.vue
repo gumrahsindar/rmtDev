@@ -1,40 +1,42 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue"
-import Background from "./components/Background.vue"
-import Container from "./components/Container.vue"
-import Footer from "./components/Footer.vue"
-import Header from "./components/Header.vue"
-import Logo from "./components/Logo.vue"
-import BookmarksButton from "./components/BookmarksButton.vue"
-import SearchForm from "./components/SearchForm.vue"
-import Sidebar from "./components/Sidebar.vue"
-import JobItemContent from "./components/JobItemContent.vue"
-import ResultsCount from "./components/ResultsCount.vue"
-import Sorting from "./components/Sorting.vue"
-import JobList from "./components/JobList.vue"
-import PaginationControls from "./components/PaginationControls.vue"
-import { useSearchQuery } from "./composables/useSearchQuery"
-import { useDebounce } from "./composables/useDebounce"
-import { SortBy } from "./types"
-import { storeBookmarkedId } from "./store/storeBookmarkedId"
-import { useLocalStorage } from "./composables/useLocalStorage"
+import { ref, computed, onMounted } from 'vue'
+import Background from './components/Background.vue'
+import Container from './components/Container.vue'
+import Footer from './components/Footer.vue'
+import Header from './components/Header.vue'
+import Logo from './components/Logo.vue'
+import BookmarksButton from './components/BookmarksButton.vue'
+import SearchForm from './components/SearchForm.vue'
+import Sidebar from './components/Sidebar.vue'
+import JobItemContent from './components/JobItemContent.vue'
+import ResultsCount from './components/ResultsCount.vue'
+import Sorting from './components/Sorting.vue'
+import JobList from './components/JobList.vue'
+import PaginationControls from './components/PaginationControls.vue'
+import { useSearchQuery } from './composables/useSearchQuery'
+import { useDebounce } from './composables/useDebounce'
+import { SortBy } from './types'
+import { storeBookmarkedId } from './store/storeBookmarkedId'
+import { useLocalStorage } from './composables/useLocalStorage'
+import { useJobItems } from './composables/useJobItems'
 
 // state
-const searchText = ref("")
+const searchText = ref('')
 const { debounceSearchText } = useDebounce(searchText)
 const { jobItems, isLoading } = useSearchQuery(debounceSearchText)
 const currentPage = ref(1)
-const sortBy = ref<SortBy>("relevant")
+const sortBy = ref<SortBy>('relevant')
 const { getItem } = useLocalStorage(
-  "bookmarkedIds",
+  'bookmarkedIds',
   storeBookmarkedId.bookmarkedIds
 )
+const { bookmarkedIds } = storeBookmarkedId
 
 // computed
 const jobItemSorted = computed(() => {
   return jobItems.value
     ? [...jobItems.value].sort((a, b) => {
-        if (sortBy.value === "relevant") {
+        if (sortBy.value === 'relevant') {
           return b.relevanceScore - a.relevanceScore
         } else {
           return a.daysAgo - b.daysAgo
@@ -67,6 +69,7 @@ const handleSortBy = (value: SortBy) => {
 // get bookmarkedIds from localStorage
 onMounted(() => {
   getItem()
+  useJobItems(bookmarkedIds.value)
 })
 </script>
 
